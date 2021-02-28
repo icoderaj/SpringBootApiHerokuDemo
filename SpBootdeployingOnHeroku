@@ -1,0 +1,38 @@
+Deploy Spring Boot applications on Heroku
+Download Heroku CLI: https://devcenter.heroku.com/articles/deploying-spring-boot-apps-to-heroku
+Commands (ignore the preceding $ sign):
+$ heroku login
+$ git init
+$ git add .
+$ git commit -m "Initial commit"
+$ heroku create <app-name>
+$ git push heroku master
+$ heroku open
+The website should work if no database is present.
+
+Application had MySQL Database, however we will use PostgreSql DB
+Add Postgres database addon with this command: $ heroku addons:create heroku-postgresql
+Add this dependency in the maven pom file (used for Postgres database addon that will enable our database to work):
+<dependency>
+    <groupId>org.postgresql</groupId>
+    <artifactId>postgresql</artifactId>
+    <version>9.4-1201-jdbc4</version>
+</dependency>
+Then edit the connection attributes in application.properties file:
+spring.datasource.url=${JDBC_DATABASE_URL}
+spring.datasource.username=${JDBC_DATABASE_USERNAME}
+spring.datasource.password=${JDBC_DATABASE_PASSWORD}
+spring.jpa.show-sql=false
+spring.jpa.generate-ddl=true
+spring.jpa.hibernate.ddl-auto=create
+NB:
+Only first time you keep this as create so that our PostgreSql database gets created and then set it to update 
+After that change it to update and commit and push once more. 
+(i.e. $ git add . , $ git commit -m "Edited file application.properties" &
+ $ git push heroku master).
+
+@icoderaj
+
+Glossary:
+https://devcenter.heroku.com/articles/deploying-spring-boot-apps-to-heroku
+https://devcenter.heroku.com/articles/connecting-to-relational-databases-on-heroku-with-java
